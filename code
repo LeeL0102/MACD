@@ -1,0 +1,20 @@
+//@version=5
+strategy("MACD Strategy", overlay=true)
+
+// 定义MACD指标参数
+macdLength = input(12, title="MACD Length")
+macdShortLength = input(26, title="MACD Short Length")
+macdSignalSmoothing = input(9, title="MACD Signal Smoothing")
+
+// 计算MACD指标
+[macdLine, signalLine, _] = ta.macd(close, macdLength, macdShortLength, macdSignalSmoothing)
+
+// 定义交易信号
+enterLong = ta.crossover(macdLine, signalLine)
+exitLong = ta.crossunder(macdLine, signalLine)
+
+// 执行交易信号
+if enterLong
+    strategy.entry("Long", strategy.long)
+if exitLong
+    strategy.close("Long")
